@@ -1,139 +1,181 @@
-// Grabbing the display element
+// script.js
+
 const display = document.getElementById("display");
+const expressionEl = document.getElementById("expression");
+const opIndicator = document.getElementById("op-indicator");
+const buttons = document.querySelectorAll("button");
 
-// Variables to store the current state of the calculator
-let currentInput = "";
-let previousInput = "";
+let firstOperand = "";
+let secondOperand = "";
 let currentOperator = null;
-let shouldResetScreen = false;
+let isResultShown = false;
 
-/**
- * Helper function to update the display text.
- * Uses value of currentInput or 0 if empty.
- */
 function updateDisplay() {
-  display.value = currentInput || "0";
-}
-
-/**
- * Clear all values to reset calculator.
- */
-function clearAll() {
-  currentInput = "";
-  previousInput = "";
-  currentOperator = null;
-  shouldResetScreen = false;
-  updateDisplay();
-}
-
-/**
- * Append a digit or decimal point to the current input.
- */
-function appendNumber(number) {
-  // Prevent multiple decimals in one number
-  if (number === "." && currentInput.includes(".")) return;
-
-  // Replace initial 0 when starting fresh
-  if (shouldResetScreen) {
-    currentInput = "";
-    shouldResetScreen = false;
-  }
-
-  currentInput += number;
-  updateDisplay();
-}
-
-/**
- * Handle operator button click (+, -, *, /, %).
- */
-function chooseOperator(operator) {
-  // If there is already a previousInput and operator, calculate first
-  if (currentOperator !== null && currentInput !== "") {
-    compute();
-  }
-
-  previousInput = currentInput || previousInput;
-  currentOperator = operator;
-  shouldResetScreen = true;
-}
-
-/**
- * Perform the calculation based on previousInput, currentInput, and currentOperator.
- */
-function compute() {
-  const prev = parseFloat(previousInput);
-  const curr = parseFloat(currentInput);
-
-  // Check if numbers are valid
-  if (isNaN(prev) || isNaN(curr)) return;
-
-  let result;
-
-  // Using if/else to satisfy the condition mentioned in the PDF
-  if (currentOperator === "+") {
-    result = prev + curr;
-  } else if (currentOperator === "-") {
-    result = prev - curr;
-  } else if (currentOperator === "*") {
-    result = prev * curr;
-  } else if (currentOperator === "/") {
-    // Handle division by zero
-    if (curr === 0) {
-      currentInput = "Error";
-      previousInput = "";
-      currentOperator = null;
-      updateDisplay();
-      return;
-    }
-    result = prev / curr;
-  } else if (currentOperator === "%") {
-    // Modulo operation
-    result = prev % curr;
+  // Big display: always show firstOperand until user starts typing secondOperand
+  if (currentOperator === null) {
+    display.value = firstOperand !== "" ? firstOperand : "0";
   } else {
+    display.value = secondOperand !== "" ? secondOperand : firstOperand || "0";
+  }
+
+  // Left operator indicator
+  if (currentOperator === null) {
+    opIndicator.textContent = "";
+  } else {
+    let opSymbol = currentOperator;
+    if (currentOperator === "/") opSymbol = "÷";
+    if (currentOperator === "*") opSymbol = "×";
+    opIndicator.textContent = opSymbol;
+  }
+
+  // Small expression preview
+  let expr = "";
+  if (firstOperand !== "") {
+    expr += firstOperand;
+  }
+  if (currentOperator !== null) {
+    let opSymbol = currentOperator;
+    if (currentOperator === "/") opSymbol = "÷";
+    if (currentOperator === "*") opSymbol = "×";
+    expr += " " + opSymbol;
+  }
+  if (secondOperand !== "") {
+    expr += " " + secondOperand;
+  }
+  expressionEl.textContent = expr;
+}
+
+
+function clearAll() {
+  firstOperand = "";
+  secondOperand = "";
+  currentOperator = null;
+  isResultShown = false;
+  display.value = "0";
+  expressionEl.textContent = "";
+  opIndicator.textContent = ""; // clear operator symbol
+}
+
+function handleNumber(num) {
+  // If result is on screen and no operator, start fresh
+  if (isResultShown && currentOperator === null) {
+    firstOperand = "";
+    isResultShown = false;
+  }
+
+  if (currentOperator === null) {
+    // typing first number
+    if (num === "." && firstOperand.includes(".")) return;
+    firstOperand += num;
+  } else {
+    // typing second number
+    if (num === "." && secondOperand.includes(".")) return;
+    secondOperand += num;
+  }
+  updateDisplay();
+}
+
+function handleOperator(op) {
+  if (firstOperand === "") return; // no first number yet
+
+  // If already have operator and second operand, compute first
+  if (currentOperator !== null && secondOperand !== "") {
+    calculate();
+  }
+
+  currentOperator = op;
+  isResultShown = false;
+  updateDisplay();
+}
+
+function calculate() {
+  if (firstOperand === "" || currentOperator === null || secondOperand === "") {
     return;
   }
 
-  currentInput = result.toString();
-  previousInput = "";
+  const a = parseFloat(firstOperand);
+  const b = parseFloat(secondOperand);
+  let result = 0;
+
+  switch (currentOperator) {
+    case "+":
+      result = a + b;
+      break;
+    case "-":
+      result = a - b;
+      break;
+    case "*":
+      result = a * b;
+      break;
+    case "/":
+      result = b === 0 ? "Error" : a / b;
+      break;
+    case "%":
+      result = a % b;
+      break;
+  }
+
+  let opSymbol = currentOperator;
+  if (currentOperator === "/") opSymbol = "÷";
+  if (currentOperator === "*") opSymbol = "×";
+
+  if (result === "Error") {
+    expressionEl.textContent = `${a} ${opSymbol} ${b} =`;
+    display.value = "Error";
+    firstOperand = "";
+    secondOperand = "";
+    currentOperator = null;
+    isResultShown = true;
+    opIndicator.textContent = ""; // remove old symbol
+    return;
+  }
+
+  expressionEl.textContent = `${a} ${opSymbol} ${b} =`;
+
+  // Put result into firstOperand so user can continue
+  firstOperand = result.toString();
+  secondOperand = "";
   currentOperator = null;
-  updateDisplay();
+  isResultShown = true;
+  display.value = firstOperand;
+  opIndicator.textContent = ""; // clear operator after result
 }
 
-/**
- * Calculate square of the current input.
- */
-function squareCurrent() {
-  const value = parseFloat(currentInput || previousInput || "0");
-  const squared = value * value;
-  currentInput = squared.toString();
-  previousInput = "";
-  currentOperator = null;
-  updateDisplay();
-}
+buttons.forEach((btn) => {
+  const number = btn.getAttribute("data-number");
+  const operator = btn.getAttribute("data-operator");
+  const action = btn.getAttribute("data-action");
 
-// Attach event listeners to all buttons using a loop
-const buttons = document.querySelectorAll(".calculator-buttons button");
+  if (number !== null) {
+    btn.addEventListener("click", () => handleNumber(number));
+  } else if (operator !== null) {
+    btn.addEventListener("click", () => handleOperator(operator));
+  } else if (action === "clear") {
+    btn.addEventListener("click", clearAll);
+  } else if (action === "square") {
+    btn.addEventListener("click", () => {
+      // Square the current visible value
+      let currentValue = display.value || "0";
+      const num = parseFloat(currentValue);
+      const result = num * num;
 
-buttons.forEach((button) => {
-  // Using dataset attributes to determine type of button
-  const number = button.dataset.number;
-  const operator = button.dataset.operator;
-  const action = button.dataset.action;
-
-  button.addEventListener("click", () => {
-    if (number !== undefined) {
-      appendNumber(number);
-    } else if (operator !== undefined) {
-      chooseOperator(operator);
-    } else if (action === "clear") {
-      clearAll();
-    } else if (action === "equals") {
-      compute();
-    } else if (action === "square") {
-      squareCurrent();
-    }
-  });
+      expressionEl.textContent = `${currentValue}² =`;
+      firstOperand = result.toString();
+      secondOperand = "";
+      currentOperator = null;
+      isResultShown = true;
+      display.value = firstOperand;
+      opIndicator.textContent = ""; // no operator for square result
+    });
+  } else if (action === "equals") {
+    btn.addEventListener("click", calculate);
+  }
 });
 
-// Initialize display when page loads
-clearAll();
+// Prevent typing directly into input
+display.addEventListener("keydown", (e) => {
+  e.preventDefault();
+});
+
+// Initialize display
+updateDisplay();
