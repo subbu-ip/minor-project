@@ -1,0 +1,70 @@
+/* Overall page background */
+body {
+  background: radial-gradient(circle at top, #1f2937, #020617);
+  color: #f9fafb;
+}
+
+/* Calculator card */
+.calculator {
+  width: 360px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Display styling */
+.calculator-display input {
+  background-color: #020617;
+  color: #e5e7eb;
+  border: 2px solid #111827;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Button base style */
+.calculator-buttons .btn {
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.4);
+  border: none;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.2s;
+}
+
+/* Light number buttons */
+.calculator-buttons .btn-light {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+/* Operator buttons */
+.calculator-buttons .btn-secondary {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+/* Equals and AC buttons special styling */
+.calculator-buttons .btn-success {
+  background-image: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ecfdf5;
+}
+
+.calculator-buttons .btn-danger {
+  background-image: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+/* Hover and active states */
+.calculator-buttons .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.6);
+}
+
+.calculator-buttons .btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.7);
+}
+
+/* Card header title */
+.calculator .card-header h4 {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}

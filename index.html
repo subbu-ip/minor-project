@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minor Project - Calculator</title>
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-dark d-flex align-items-center justify-content-center min-vh-100">
+
+  <div class="calculator card shadow-lg">
+    <div class="card-header text-center bg-primary text-white">
+      <h4 class="mb-0">Web Dev Minor Project - Calculator</h4>
+    </div>
+
+    <div class="card-body">
+      <!-- Display -->
+      <div class="calculator-display mb-3">
+        <!-- Using input so user can see selection and long numbers -->
+        <input
+          type="text"
+          class="form-control text-end fs-3"
+          id="display"
+          placeholder="0"
+          readonly          
+        />
+      </div>
+
+      <!-- Buttons -->
+      <div class="calculator-buttons d-grid gap-2">
+        <!-- Row 1 -->
+        <div class="row g-2">
+          <div class="col-3">
+            <button class="btn btn-danger w-100 btn-lg" data-action="clear">AC</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-secondary w-100 btn-lg" data-action="square">x²</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-secondary w-100 btn-lg" data-operator="%">%</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-secondary w-100 btn-lg" data-operator="/">÷</button>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row g-2">
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="7">7</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="8">8</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="9">9</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-secondary w-100 btn-lg" data-operator="*">×</button>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="row g-2">
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="4">4</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="5">5</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="6">6</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-secondary w-100 btn-lg" data-operator="-">-</button>
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="row g-2">
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="1">1</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="2">2</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="3">3</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-secondary w-100 btn-lg" data-operator="+">+</button>
+          </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="row g-2">
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number="0">0</button>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-light w-100 btn-lg" data-number=".">.</button>
+          </div>
+          <div class="col-6">
+            <button class="btn btn-success w-100 btn-lg" data-action="equals">=</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (optional, not required for basic calculator logic) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+
+  <!-- Custom JS -->
+  <script src="script.js"></script>
+</body>
+</html>
