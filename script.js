@@ -11,11 +11,12 @@ let currentOperator = null;
 let isResultShown = false;
 
 function updateDisplay() {
-  // Big display: always show firstOperand until user starts typing secondOperand
+  // Big display: show current operand; after operator click still show firstOperand
   if (currentOperator === null) {
     display.value = firstOperand !== "" ? firstOperand : "0";
   } else {
-    display.value = secondOperand !== "" ? secondOperand : firstOperand || "0";
+    display.value =
+      secondOperand !== "" ? secondOperand : firstOperand || "0";
   }
 
   // Left operator indicator
@@ -45,7 +46,6 @@ function updateDisplay() {
   expressionEl.textContent = expr;
 }
 
-
 function clearAll() {
   firstOperand = "";
   secondOperand = "";
@@ -53,7 +53,7 @@ function clearAll() {
   isResultShown = false;
   display.value = "0";
   expressionEl.textContent = "";
-  opIndicator.textContent = ""; // clear operator symbol
+  opIndicator.textContent = "";
 }
 
 function handleNumber(num) {
@@ -85,6 +85,27 @@ function handleOperator(op) {
 
   currentOperator = op;
   isResultShown = false;
+  updateDisplay();
+}
+
+function handleBackspace() {
+  // If result is shown and no operator, backspace should clear everything
+  if (isResultShown && currentOperator === null) {
+    clearAll();
+    return;
+  }
+
+  if (currentOperator === null) {
+    // editing first operand
+    if (firstOperand.length > 0) {
+      firstOperand = firstOperand.slice(0, -1);
+    }
+  } else {
+    // editing second operand
+    if (secondOperand.length > 0) {
+      secondOperand = secondOperand.slice(0, -1);
+    }
+  }
   updateDisplay();
 }
 
@@ -126,7 +147,7 @@ function calculate() {
     secondOperand = "";
     currentOperator = null;
     isResultShown = true;
-    opIndicator.textContent = ""; // remove old symbol
+    opIndicator.textContent = "";
     return;
   }
 
@@ -138,7 +159,7 @@ function calculate() {
   currentOperator = null;
   isResultShown = true;
   display.value = firstOperand;
-  opIndicator.textContent = ""; // clear operator after result
+  opIndicator.textContent = "";
 }
 
 buttons.forEach((btn) => {
@@ -152,9 +173,10 @@ buttons.forEach((btn) => {
     btn.addEventListener("click", () => handleOperator(operator));
   } else if (action === "clear") {
     btn.addEventListener("click", clearAll);
+  } else if (action === "backspace") {
+    btn.addEventListener("click", handleBackspace);
   } else if (action === "square") {
     btn.addEventListener("click", () => {
-      // Square the current visible value
       let currentValue = display.value || "0";
       const num = parseFloat(currentValue);
       const result = num * num;
@@ -165,7 +187,7 @@ buttons.forEach((btn) => {
       currentOperator = null;
       isResultShown = true;
       display.value = firstOperand;
-      opIndicator.textContent = ""; // no operator for square result
+      opIndicator.textContent = "";
     });
   } else if (action === "equals") {
     btn.addEventListener("click", calculate);
